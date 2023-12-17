@@ -26,6 +26,7 @@ CREATE TABLE Authors(
 	last_name VARCHAR(50),
 	id_country INT,
 	gender VARCHAR(1),
+	birth_date DATE,
 	FOREIGN KEY (id_country) REFERENCES Countries(id_country)
 );
 
@@ -58,15 +59,16 @@ CREATE TABLE Users(
 );
 
 CREATE TABLE Borrowing (
+	id_borrow SERIAL PRIMARY KEY,
     id_user INT,
     id_copy INT,
 	id_librarian INT,
     borrowTime DATE,
-    PRIMARY KEY (id_user, id_copy),
+	returnTime DATE,
+    FOREIGN KEY (id_user) REFERENCES Users(id_user)
+	FOREIGN KEY (id_copy) REFERENCES BookCopies(id_copy)
 	FOREIGN KEY (id_librarian) REFERENCES Librarians(id_librarian)
 );
-ALTER TABLE Borrowing
-ADD COLUMN returnTime DATE;
 
 CREATE OR REPLACE PROCEDURE BookBorrowing(in_id_copy INT, in_id_user INT)
 LANGUAGE plpgsql
