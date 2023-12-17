@@ -65,7 +65,8 @@ CREATE TABLE Borrowing (
     PRIMARY KEY (id_user, id_copy),
 	FOREIGN KEY (id_librarian) REFERENCES Librarians(id_librarian)
 );
-
+ALTER TABLE Borrowing
+ADD COLUMN returnTime DATE;
 
 CREATE OR REPLACE PROCEDURE BookBorrowing(in_id_copy INT, in_id_user INT)
 LANGUAGE plpgsql
@@ -83,6 +84,11 @@ BEGIN
     SELECT borrowTime INTO borrowTime
     FROM Borrowing
     WHERE id_copy = in_id_copy AND id_user = in_id_user;
+
+
+	IF borrowTime IS NOT NULL THEN
+        RAISE EXCEPTION 'User has some books borrowed';
+    END IF;
 
     -- seasons
     summerSeason := CASE
@@ -123,7 +129,7 @@ BEGIN
     INSERT INTO Borrowing (id_user, id_copy, borrowTime)
     VALUES (in_id_user, in_id_copy, borrowTime);
 
-    RAISE NOTICE 'Zakasnina iznosi % EUR po danu.', fee;
+    RAISE NOTICE 'Users fee: % EUR', fee;
 
 END;
 $$;
