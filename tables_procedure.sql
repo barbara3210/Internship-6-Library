@@ -43,12 +43,12 @@ CREATE TABLE Librarians(
 );
 
 CREATE TABLE BookCopies (
+	id_copy SERIAL PRIMARY KEY,
     code VARCHAR(255) NOT NULL,
     id_book INT,
 	id_author INT,
 	releseDate DATE,
-	PRIMARY KEY (id_book, id_author)
-    
+	
 );
 
 CREATE TABLE Users(
